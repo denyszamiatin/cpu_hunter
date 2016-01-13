@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 import requests
 
 URL = 'http://olx.ua/elektronika/kompyutery/q-процессор/'
