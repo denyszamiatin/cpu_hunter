@@ -2,16 +2,7 @@
 
 import requests
 import chardet
-
-
-URL = 'http://olx.ua/elektronika/kompyutery/q-процессор/'
-
-
-def get_web_page(url):
-    return requests.get(url).content
-
-
-print get_web_page(URL)
+import ConfigParser
 
 
 def get_page_code():
@@ -19,4 +10,16 @@ def get_page_code():
     return coding
 
 
+def read_config_file():
+    config = ConfigParser.ConfigParser()
+    config.read('hunter.cfg')
+    return dict(config.items('initial_configuration'))
 
+
+def get_web_page(url):
+    return requests.get(url).content
+
+CONFIG = read_config_file()
+URL = CONFIG.get('url')
+
+print get_web_page(URL)
