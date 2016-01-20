@@ -1,25 +1,32 @@
 # -*- coding: utf-8 -*-
+import ConfigParser
 
 import requests
 import chardet
-import ConfigParser
+
+CONFIG_FILENAME = 'hunter.cfg'
 
 
-def get_page_code():
-    coding = chardet.detect(get_web_page(URL)).get('encoding')
-    return coding
+class ConfigReader(object):
+    def __init__(self, filename=CONFIG_FILENAME):
+        self.config = ConfigParser.ConfigParser()
+        self.config.read(filename)
 
-
-def read_config_file():
-    config = ConfigParser.ConfigParser()
-    config.read('hunter.cfg')
-    return dict(config.items('initial_configuration'))
+    def get_url(self):
+        return self.config.get('initial_configuration', 'url')
 
 
 def get_web_page(url):
     return requests.get(url).content
 
-CONFIG = read_config_file()
-URL = CONFIG.get('url')
 
-print get_web_page(URL)
+def get_encoding(page):
+    return chardet.detect(page)['encoding']
+
+
+config = ConfigReader()
+url = config.get_url()
+page = get_web_page(url)
+encoding = get_encoding(page)
+unicode_page = page.decode(encoding)
+print unicode_page
