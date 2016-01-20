@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import ConfigParser
+import abc
 
 import requests
 import chardet
@@ -7,13 +8,25 @@ import chardet
 CONFIG_FILENAME = 'hunter.cfg'
 
 
-class ConfigReader(object):
+class Reader(object):
+    __metaclass__ = abc.ABCMeta
+    @abc.abstractmethod
+    def get_url(self):
+        pass
+
+
+class ConfigReader(Reader):
     def __init__(self, filename=CONFIG_FILENAME):
         self.config = ConfigParser.ConfigParser()
         self.config.read(filename)
 
     def get_url(self):
         return self.config.get('initial_configuration', 'url')
+
+
+class XMLReader(Reader):
+    def get_url(self):
+        pass
 
 
 def get_web_page(url):
