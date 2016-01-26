@@ -2,6 +2,7 @@
 import ConfigParser
 import abc
 import re
+from urlparse import urlparse
 
 import requests
 import chardet
@@ -15,6 +16,14 @@ class Reader(object):
     @abc.abstractmethod
     def get_url(self):
         pass
+
+
+class AbsoluteUrl(object):
+    def __init__(self, adress):
+        self.domain = urlparse(adress).netloc
+        self.path = urlparse(adress).path
+        self.scheme = urlparse(adress).scheme
+        self.port = urlparse(adress).port
 
 
 class ConfigReader(Reader):
@@ -53,9 +62,14 @@ def get_details(page):
         print '{}: {}'.format(char, regex.findall(page)[0].strip())
 
 
+
 config = ConfigReader()
 url = config.get_url()
 page = get_web_page(url)
 encoding = get_encoding(page)
 unicode_page = page.decode(encoding)
-print unicode_page
+print AbsoluteUrl(url).scheme
+print AbsoluteUrl(url).domain
+print AbsoluteUrl(url).path
+
+
