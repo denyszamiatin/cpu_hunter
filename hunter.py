@@ -35,6 +35,9 @@ class ConfigReader(Reader):
     def get_url(self):
         return self.config.get('initial_configuration', 'url')
 
+    def get_link_template(self):
+        return self.config.get('initial_configuration', 'linktemplate')
+
 
 class XMLReader(Reader):
     def get_url(self):
@@ -65,7 +68,7 @@ def get_details(page):
 
 def get_product_url(page):
     tree = html.fromstring(page)
-    return tree.xpath('//a[@class="marginright5 link linkWithHash detailsLink"]/@href')
+    return tree.xpath(config.get_link_template())
 
 
 config = ConfigReader()
@@ -73,6 +76,7 @@ url = config.get_url()
 page = get_web_page(url)
 encoding = get_encoding(page)
 unicode_page = page.decode(encoding)
+print get_product_url(unicode_page)
 print AbsoluteUrl(url).scheme
 print AbsoluteUrl(url).domain
 print AbsoluteUrl(url).path
