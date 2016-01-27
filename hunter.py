@@ -6,6 +6,7 @@ from urlparse import urlparse
 
 import requests
 import chardet
+from lxml import html
 
 CONFIG_FILENAME = 'hunter.cfg'
 
@@ -61,6 +62,10 @@ def get_details(page):
     for char, regex in CHARS.items():
         print '{}: {}'.format(char, regex.findall(page)[0].strip())
 
+
+def get_product_url(page):
+    tree = html.fromstring(page)
+    return tree.xpath('//a[@class="marginright5 link linkWithHash detailsLink"]/@href')
 
 
 config = ConfigReader()
