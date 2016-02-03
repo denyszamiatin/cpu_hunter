@@ -105,12 +105,17 @@ CHARS = {
 }
 
 
+def convert_item(item):
+    return item[0] if item else []
+
+
 def get_details(page):
     """
     Uses a set of RegExp expressions "CHARS" to find and return a dictionary
     of values
     """
-    return {char: regex.findall(page) for char, regex in CHARS.items()}
+    return {char: convert_item(regex.findall(page))
+            for char, regex in CHARS.items()}
 
 
 config = ConfigReader()
